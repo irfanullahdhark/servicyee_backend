@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,11 +77,22 @@ WSGI_APPLICATION = 'servicyee_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'servicyee_db'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'admin'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', '5435'),
     }
 }
 
+
+AUTHENTICATION_BACKENDS = [
+    'keycloak_auth.backends.KeycloakAuthorizationCodeBackend',  
+    'django.contrib.auth.backends.ModelBackend',  
+]
+
+and tell me which packages do I need
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -122,3 +134,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+KEYCLOAK_EXEMPT_URIS = []
+KEYCLOAK_CONFIG = {
+    'KEYCLOAK_SERVER_URL': os.getenv('KEYCLOAK_SERVER_URL', 'http://192.168.1.231:8080'),
+    'KEYCLOAK_REALM': os.getenv('KEYCLOAK_REALM', 'connectub'),
+    'KEYCLOAK_CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID', 'jobs-service'),
+    'KEYCLOAK_CLIENT_SECRET_KEY':   os.getenv('KEYCLOAK_CLIENT_SECRET_KEY', 'NRRXLISipzWTBWI2sOrvFCCZaiI17bjy'),
+    'KEYCLOAK_CACHE_TTL': int(os.getenv('KEYCLOAK_CACHE_TTL', '60')),
+    'LOCAL_DECODE': os.getenv('KEYCLOAK_LOCAL_DECODE', 'False') == 'True'
+}
+ 
+KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL', "http://192.168.1.231:8080")
+MASTER_REALM = os.getenv('KEYCLOAK_MASTER_REALM', "master")
+KEYCLOAK_REALM = os.getenv('KEYCLOAK_REALM', "connectub")
+KEYCLOAK_ADMIN_CLIENT_ID = os.getenv('KEYCLOAK_ADMIN_CLIENT_ID', "admin-cli")
+KEYCLOAK_ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_USERNAME', "user_manager")
+KEYCLOAK_ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD', "admin")
+KEYCLOAK_ADMIN_CLIENT_SECRET = os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET', "9cDYqX2IZBAkbANk4jS8wvA6h74inSHK")
+KEYCLOAK_CLIENT_ID = os.getenv('KEYCLOAK_CLIENT_ID', "jobs-service")
+
+
