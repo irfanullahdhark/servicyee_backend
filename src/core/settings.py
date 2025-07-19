@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+import environ
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,10 +26,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+DEBUG = env("DEBUG")
+SECRET_KEY = env("SECRET_KEY")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
+DATABASES = {
+    'default': env.db(),  # reads DATABASE_URL from .env
+}
 
 # Application definition
 
@@ -51,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'servicyee_backend.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -68,18 +81,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'servicyee_backend.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
