@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -27,33 +26,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< HEAD:src/backend/settings.py
 env = environ.Env(
     DEBUG=(bool, True),
-    SECRET_KEY=(str, 'django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz'),
-    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1']),
-    DATABASE_URL=(str, 'sqlite:///db.sqlite3'),
+    SECRET_KEY=(str, "django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz"),
+    ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
+    DATABASE_URL=(str, "sqlite:///db.sqlite3"),
     # Keycloak settings with defaults for development
-    KEYCLOAK_SERVER_URL=(str, 'http://localhost:8080'),
-    KEYCLOAK_REALM=(str, 'master'),
-    KEYCLOAK_CLIENT_ID=(str, 'django-app'),
-    KEYCLOAK_CLIENT_SECRET_KEY=(str, 'dummy-secret'),
+    KEYCLOAK_SERVER_URL=(str, "http://localhost:8080"),
+    KEYCLOAK_REALM=(str, "master"),
+    KEYCLOAK_CLIENT_ID=(str, "django-app"),
+    KEYCLOAK_CLIENT_SECRET_KEY=(str, "dummy-secret"),
     KEYCLOAK_CACHE_TTL=(int, 300),
-    KEYCLOAK_LOCAL_DECODE=(str, 'False'),
-    KEYCLOAK_MASTER_REALM=(str, 'master'),
-    KEYCLOAK_ADMIN_CLIENT_ID=(str, 'admin-cli'),
-    KEYCLOAK_ADMIN_USERNAME=(str, 'admin'),
-    KEYCLOAK_ADMIN_PASSWORD=(str, 'admin'),
-    KEYCLOAK_ADMIN_CLIENT_SECRET=(str, 'dummy-admin-secret')
+    KEYCLOAK_LOCAL_DECODE=(str, "False"),
+    KEYCLOAK_MASTER_REALM=(str, "master"),
+    KEYCLOAK_ADMIN_CLIENT_ID=(str, "admin-cli"),
+    KEYCLOAK_ADMIN_USERNAME=(str, "admin"),
+    KEYCLOAK_ADMIN_PASSWORD=(str, "admin"),
+    KEYCLOAK_ADMIN_CLIENT_SECRET=(str, "dummy-admin-secret"),
 )
-=======
-env = environ.Env(DEBUG=(bool, False))
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-# DEBUG = True
->>>>>>> 2ffd9a906694c59573adceb067805fec1ac1e5f8:src/core/settings.py
 
 # Try to read .env file if it exists
-env_file = os.path.join(BASE_DIR, '.env')
+env_file = os.path.join(BASE_DIR, ".env")
 if os.path.exists(env_file):
     environ.Env.read_env(env_file)
 
@@ -74,52 +67,29 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "users",
+    "user",
     "rest_framework",
-    "rest_framework.authtoken",
-    "rest_framework_simplejwt",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "dj_rest_auth",
-    "dj_rest_auth.registration",
-    "drf_yasg",
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
-<<<<<<< HEAD:src/backend/settings.py
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_keycloak_auth.middleware.KeycloakMiddleware',
-]
-
-AUTHENTICATION_BACKENDS = [
-    'keycloak_auth.backends.KeycloakAuthenticationCodeBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-ROOT_URLCONF = 'backend.urls'
-=======
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "django_keycloak_auth.middleware.KeycloakMiddleware",
 ]
 
-ROOT_URLCONF = "core.urls"
->>>>>>> 2ffd9a906694c59573adceb067805fec1ac1e5f8:src/core/settings.py
+AUTHENTICATION_BACKENDS = [
+    "keycloak_auth.backends.KeycloakAuthenticationCodeBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
     {
@@ -136,11 +106,7 @@ TEMPLATES = [
     },
 ]
 
-<<<<<<< HEAD:src/backend/settings.py
-WSGI_APPLICATION = 'backend.wsgi.application'
-=======
-WSGI_APPLICATION = "core.wsgi.application"
->>>>>>> 2ffd9a906694c59573adceb067805fec1ac1e5f8:src/core/settings.py
+WSGI_APPLICATION = "backend.wsgi.application"
 
 
 # Database
@@ -195,74 +161,24 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-<<<<<<< HEAD:src/backend/settings.py
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 KEYCLOAK_EXEMPT_URIS = []
 KEYCLOAK_CONFIG = {
-    'KEYCLOAK_SERVER_URL': env('KEYCLOAK_SERVER_URL'),
-    'KEYCLOAK_REALM': env('KEYCLOAK_REALM'),
-    'KEYCLOAK_CLIENT_ID': env('KEYCLOAK_CLIENT_ID'),
-    'KEYCLOAK_CLIENT_SECRET_KEY':   env('KEYCLOAK_CLIENT_SECRET_KEY'),
-    'KEYCLOAK_CACHE_TTL': int(env('KEYCLOAK_CACHE_TTL')),
-    'LOCAL_DECODE': env('KEYCLOAK_LOCAL_DECODE') == 'True'
-}
- 
-KEYCLOAK_SERVER_URL = env('KEYCLOAK_SERVER_URL')
-MASTER_REALM = env('KEYCLOAK_MASTER_REALM')
-KEYCLOAK_REALM = env('KEYCLOAK_REALM')
-KEYCLOAK_ADMIN_CLIENT_ID = env('KEYCLOAK_ADMIN_CLIENT_ID')
-KEYCLOAK_ADMIN_USERNAME = env('KEYCLOAK_ADMIN_USERNAME')
-KEYCLOAK_ADMIN_PASSWORD = env('KEYCLOAK_ADMIN_PASSWORD')
-KEYCLOAK_ADMIN_CLIENT_SECRET = env('KEYCLOAK_ADMIN_CLIENT_SECRET')
-KEYCLOAK_CLIENT_ID = env('KEYCLOAK_CLIENT_ID')
-=======
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_UNIQUE_EMAIL = True
-# ACCOUNT_LOGIN_METHODS = {'email'}
-# ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-# # still valid if you're not using username at all
-
-
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
-
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+    "KEYCLOAK_SERVER_URL": env("KEYCLOAK_SERVER_URL"),
+    "KEYCLOAK_REALM": env("KEYCLOAK_REALM"),
+    "KEYCLOAK_CLIENT_ID": env("KEYCLOAK_CLIENT_ID"),
+    "KEYCLOAK_CLIENT_SECRET_KEY": env("KEYCLOAK_CLIENT_SECRET_KEY"),
+    "KEYCLOAK_CACHE_TTL": int(env("KEYCLOAK_CACHE_TTL")),
+    "LOCAL_DECODE": env("KEYCLOAK_LOCAL_DECODE") == "True",
 }
 
-
-REST_AUTH = {
-    "USE_JWT": True,
-    "JWT_AUTH_HTTPONLY": False,
-    "JWT_AUTH_COOKIE": "core-app-auth",
-    "JWT_AUTH_REFRESH_COOKIE": "core-refresh-token",
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
-}
-
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}}
-}
->>>>>>> 2ffd9a906694c59573adceb067805fec1ac1e5f8:src/core/settings.py
+KEYCLOAK_SERVER_URL = env("KEYCLOAK_SERVER_URL")
+MASTER_REALM = env("KEYCLOAK_MASTER_REALM")
+KEYCLOAK_REALM = env("KEYCLOAK_REALM")
+KEYCLOAK_ADMIN_CLIENT_ID = env("KEYCLOAK_ADMIN_CLIENT_ID")
+KEYCLOAK_ADMIN_USERNAME = env("KEYCLOAK_ADMIN_USERNAME")
+KEYCLOAK_ADMIN_PASSWORD = env("KEYCLOAK_ADMIN_PASSWORD")
+KEYCLOAK_ADMIN_CLIENT_SECRET = env("KEYCLOAK_ADMIN_CLIENT_SECRET")
+KEYCLOAK_CLIENT_ID = env("KEYCLOAK_CLIENT_ID")
