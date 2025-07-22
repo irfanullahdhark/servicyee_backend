@@ -159,10 +159,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # # still valid if you're not using username at all
 
-REST_AUTH_REGISTER_SERIALIZERS = {
-    "register": "users.serializers.CustomRegisterSerializer",
-}
-
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
