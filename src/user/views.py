@@ -6,7 +6,7 @@ import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .utils import create_user, get_admin_access_token
+from .utils import create_user, get_admin_access_token, get_user_access_token
 
 env = environ.Env()
 environ.Env.read_env(
@@ -66,6 +66,31 @@ def register_user(request):
         requests.put(verify_email_url, headers=headers)
 
         return JsonResponse({"message": "User registered successfully"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+
+@csrf_exempt
+def login_user(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
+    try:
+        data = json.loads(request.body)
+        email = data.get("email")
+        password = data.get("password")
+
+        if not all([email, password]):
+            return JsonResponse({"error": "Missing credentials"}, status=400)
+        access_token = get_user_access_token(email, password)
+        if access_token is None:
+            return JsonResponse({
+                "error": "Login failed",
+                "details": access_token
+            }, status=400)
+
+        return JsonResponse({"access_token": access_token})
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
