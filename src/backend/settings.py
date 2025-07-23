@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "user",
     "base",
     "rest_framework",
+    "drf_yasg",
 ]
 
 SITE_ID = 1
