@@ -1,11 +1,12 @@
+import json
 import os
 
 import environ
-from rest_framework import status, viewsets
-from rest_framework.response import Response
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import User
-from .serializers import UserSerializer
+from .utils import create_user, get_admin_access_token
 
 env = environ.Env()
 environ.Env.read_env(
@@ -13,17 +14,58 @@ environ.Env.read_env(
 )
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    keycloak_roles = {
-        "GET": ["admin"],
-        "POST": ["admin"],
-        "PUT": ["admin"],
-        "PATCH": ["admin"],
-        "DELETE": ["admin"],
-    }
+@csrf_exempt
+def register_user(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
 
-    def list(self, request):
-        print(env("KEYCLOAK_SERVER_URL"))
-        return Response({"message": "Hello, World!"}, status=status.HTTP_200_OK)
+    try:
+        data = json.loads(request.body)
+        email = data.get("email")
+        password = data.get("password")
+        confirm_password = data.get("confirm_password")
+        full_name = data.get("full_name")
+
+        if not all([email, password, confirm_password, full_name]):
+            return JsonResponse({"error": "Missing required fields"}, status=400)
+
+        if password != confirm_password:
+            return JsonResponse({"error": "Passwords do not match"}, status=400)
+
+        # Step 1: Get admin token
+        access_token = get_admin_access_token()
+        user_url = (
+            f"{env('KEYCLOAK_SERVER_URL')}/admin/realms/{env('KEYCLOAK_REALM')}/users"
+        )
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        }
+
+        data = {
+            "full_name": full_name,
+            "email": email,
+            "password": password,
+        }
+
+        create_resp = create_user(data=data, user_url=user_url, headers=headers)
+        if create_resp.status_code not in [201, 204]:
+            return JsonResponse(
+                {"error": "Failed to create user", "details": create_resp.text},
+                status=400,
+            )
+
+        # Get created user ID
+        get_users_resp = requests.get(
+            user_url, headers=headers, params={"email": email}
+        )
+        user_id = get_users_resp.json()[0]["id"]
+
+        # Trigger email verification
+        verify_email_url = f"{env('KEYCLOAK_SERVER_URL')}/admin/realms/{env('KEYCLOAK_REALM')}/users/{user_id}/send-verify-email"
+        requests.put(verify_email_url, headers=headers)
+
+        return JsonResponse({"message": "User registered successfully"})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
