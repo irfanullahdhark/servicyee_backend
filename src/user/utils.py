@@ -26,6 +26,22 @@ def get_admin_access_token():
     return None
 
 
+def get_user_access_token(email, password):
+    token_url = f"{env('KEYCLOAK_SERVER_URL')}/realms/{env('KEYCLOAK_REALM')}/protocol/openid-connect/token"
+    payload = {
+            "grant_type": "password",
+            "client_id": env("KEYCLOAK_CLIENT_ID"),
+            "client_secret": env("KEYCLOAK_CLIENT_SECRET_KEY"),
+            "username": email,
+            "password": password,
+        }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.post(token_url, data=payload, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    return None
+
+
 def create_user(data, user_url, headers):
     first_name, *last = data.get("full_name").split(" ")
     last_name = " ".join(last) if last else ""
