@@ -28,7 +28,10 @@ SECRET_KEY = "django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz
 # SECURITY WARNING: don't run with debug turned on in production!
 env = environ.Env(
     DEBUG=(bool, True),
-    SECRET_KEY=(str, "django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz"),
+    SECRET_KEY=(
+        str,
+        "django-insecure-$xcdq%&^3paqw%%-qgsqwp(m1i98h&9h)m&bc$2su#xj0jx7uz",
+    ),
     ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
     DATABASE_URL=(str, "sqlite:///db.sqlite3"),
     # Keycloak settings with defaults for development
